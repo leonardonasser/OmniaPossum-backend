@@ -1,8 +1,13 @@
 package br.com.omniaPossum.domain.auth;
 
+import lombok.Data;
+
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+@Data
 public class AuthRequest {
+
 
     @NotNull
     private String email;
@@ -10,20 +15,4 @@ public class AuthRequest {
     @NotNull
     private String senha;
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-    
 }

@@ -1,7 +1,5 @@
 package br.com.omniaPossum.domain.auth;
 
-import java.util.List;
-
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -14,11 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import br.com.omniaPossum.usuario.Usuario;
-import br.com.omniaPossum.usuario.UsuarioService;
 
 @Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -29,30 +22,25 @@ import br.com.omniaPossum.usuario.UsuarioService;
 @Tag(name = "Auth")
 public class AuthResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AuthResource.class);
+    @Inject
+    AuthService authService;
 
-	@Inject
-	private UsuarioService usuarioService;
+    @POST
+    @Path("/login")
+    public AuthResponse login(@Valid AuthRequest authRequest) {
+        return authService.autenticar(authRequest.getEmail(), authRequest.getSenha());
+    }
 
-	@POST
-	@Path("/login")
-	public AuthResponse login(@Valid AuthRequest authRequest) throws Exception {
-		AuthResponse response = new AuthResponse(authRequest.getEmail(), authRequest.getSenha());
-		List<Usuario> usuarioList = usuarioService.buscarTodos();
-		boolean encontrou = false;
-		
-		for (Usuario usuario: usuarioList) {
-			if (response.getEmail().equals(usuario.getEmail()) && response.getToken().equals(usuario.getSenha())) {
-				System.out.print("senha ok");
-				encontrou = true;
-			}
-		}
+   /* @POST
+    @Path("/reset-senha")
+    public void pedidoResetarSenha(@Valid PedidoResetSenha pedidoResetSenha) {
+        authService.resetarSenha(pedidoResetSenha.getCpf());
+    }*/
 
-		if (encontrou == false) {
-			throw new Exception("Usuario ou senha Invalidos!");
-		}
-
-		return response;
-	}
+    @POST
+    @Path("/senha")
+    public AuthResponse atualizarSenha(@Valid AtualizacaoSenha atualizacaoSenha) {
+        return authService.atualizarSenha(atualizacaoSenha.getToken(), atualizacaoSenha.getNovaSenha());
+    }
 
 }

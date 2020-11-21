@@ -1,4 +1,4 @@
-package br.com.omniaPossum.usuario;
+package br.com.omniaPossum.domain.usuario;
 
 import javax.validation.constraints.NotNull;
 
